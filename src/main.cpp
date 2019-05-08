@@ -74,11 +74,10 @@ int main(int argc, char *argv[]){
     Box *grid;
     int num_Yparts = (1/StrideY);
     int numberofBox = (1/StrideX)*(num_Yparts);
-    grid = (Box*)malloc(sizeof(Box)*numberofBox); //allcate that many grid elements
+    //grid = (Box*)malloc(sizeof(Box)*numberofBox); //allcate that many grid elements
+    grid = new Box[numberofBox]; //allcate that many grid elements
     gridding(grid, BoundingBox); //Initializing Grids
     InsidePoly(BoundingBox, grid, ListPolygons, N_Polygons, numberofBox);
-
-    cout << "outside InsidePoly" << endl;
 
     //Completed PreProc
 
