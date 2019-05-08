@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
     ifstream infile(argv[1]);
     infile >> N_Polygons;
-    cout << N_Polygons << " polygons in this file" << endl;
+    //cout << N_Polygons << " polygons in this file" << endl;
 
     Polygon *ListPolygons; //This is the list of all the polygons given
     ListPolygons = (Polygon*)malloc(sizeof(Polygon)*N_Polygons);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
         UpdateboundingBox(BoundingBox, ListPolygons[i].points[3]);
     }
     infile.close();
-    
+
     Box *grid;
     int num_Yparts = (1/StrideY);
     int numberofBox = (1/StrideX)*(num_Yparts);
@@ -83,31 +83,28 @@ int main(int argc, char *argv[]){
 
     //Now Read the Points input file
     ifstream Pointfile(argv[2]);
-    /*
-       while((Pointfile >> P.x >> eater >> P.y))
-       {
-    //cout << P.x << " " << P.y << endl;
-
-    //Here is where you try to get the smallest distance for this point
-
+    int id;
+    while((Pointfile >> P.x >> eater >> P.y))
+    {
+        id = PointInside(P, grid, BoundingBox);
+        //cout << "Point " << P.x << " " << P.y << " is inside grid ID = " << id << endl;
+        //Call the Distance function for polygons in that grid
+        
+        int index = 0;
+        float dist = 1000000000;
+        float distn;
+        vector<int>::iterator ptr;
+        for(ptr = grid[id].Poly.begin(); ptr < grid[id].Poly.end(); ptr++)
+        {
+            distn = Point2Polygon(P, ListPolygons[*ptr]);
+            if(distn < dist)
+            {
+                dist = distn;
+                index = ListPolygons[*ptr].label;
+            }
+        }
+        cout << "Shortest Dist of point " << P.x << " " << P.y << " is " << dist << " from Polygon number "  << index << endl;
     }
-    */
     Pointfile.close();
-
-    /*
-       int index = 0;
-       float dist = 1000000000;
-       float distn;
-       for(int i=0; i< N_Polygons; i++)
-       {
-       distn = Point2Polygon(P, ListPolygons[i]);
-       if(distn < dist)
-       {
-       dist = distn;
-       index = ListPolygons[i].label;
-       }
-       }
-       cout << "Shortest Dist is " << dist << " from Polygon number "  << index << endl;
-       */
     return 0;
 }

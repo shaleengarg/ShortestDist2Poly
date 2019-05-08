@@ -12,28 +12,23 @@ void PrintPoly(Polygon Poly){ // Prints the given polygon
 
 void gridding(Box *grid, Polygon BoundingBox){ //Initializes grids in the boundingbox
     int num_Yparts = (1/StrideY);
-    cout << "num_Yparts = " << num_Yparts << endl;
-
     float Len_X = abs(BoundingBox.points[0].x - BoundingBox.points[3].x);
     float Len_Y = abs(BoundingBox.points[0].y - BoundingBox.points[1].y);
-
     float AddLenX = StrideX*Len_X; //How much length adds to each box X
     float AddLenY = StrideY*Len_Y; //How much length adds to each box Y
-
     int id;
     for(int i=0; i<num_Yparts; i++){
         for(int j=0; j<(1/StrideX); j++){
             id = (i*num_Yparts)+j; 
             grid[id].lower.x = min(BoundingBox.points[0].x, BoundingBox.points[3].x) + j*AddLenX;
             grid[id].lower.y = min(BoundingBox.points[1].y, BoundingBox.points[0].y) + i*AddLenY;
+            //cout << "ID = " << id << " x= " << grid[id].lower.x << " y = " << grid[id].lower.y << endl;
         }
     }
 }
 
-// Given three colinear points p, q, r, the function checks if 
-// point q lies on line segment 'pr' 
-bool onSegment(Point p, Point q, Point r) 
-{ 
+// Given three colinear points p, q, r, the function checks if point q lies on line segment 'pr' 
+bool onSegment(Point p, Point q, Point r) { 
     if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && 
         q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y)) 
        return true; 
@@ -41,10 +36,8 @@ bool onSegment(Point p, Point q, Point r)
     return false; 
 } 
   
-// The main function that returns true if line segment 'p1q1' 
-// and 'p2q2' intersect. 
-bool Intersect(Point p1, Point q1, Point p2, Point q2) 
-{ 
+// The main function that returns true if line segment 'p1q1'  and 'p2q2' intersect. 
+bool Intersect(Point p1, Point q1, Point p2, Point q2) { 
     // Find the four orientations needed for general and 
     // special cases 
     int o1 = orientation(p1, q1, p2); 
@@ -86,12 +79,13 @@ bool AtIntersect(Box &grid, Polygon Poly, Polygon BoundingBox){ //Returns true i
         {
             if(Intersect(GridBox.points[i%4], GridBox.points[(i+1)%4], Poly.points[j%4], Poly.points[(j+1)%4]) == true)
             {
-                cout << "Grid line " << GridBox.points[i%4].x << " " << GridBox.points[i%4].y;
+                /*cout << "Grid line " << GridBox.points[i%4].x << " " << GridBox.points[i%4].y;
                 cout << " " << GridBox.points[(i+1)%4].x << " " << GridBox.points[(1+i)%4].y;
                 cout << " intersect with ";
                 cout << "Poly line " << Poly.points[i%4].x << " " << Poly.points[i%4].y;
                 cout << " " << Poly.points[(1+i)%4].x << " " << Poly.points[(1+i)%4].y << endl;
-                PrintPoly(Poly);
+                */
+                //PrintPoly(Poly);
                 return true;
             }
         }
@@ -104,24 +98,24 @@ bool Inside(Box &grid, Polygon Poly, Polygon BoundingBox){ //Returns true if atl
     float AddLenX = StrideX*abs(BoundingBox.points[0].x - BoundingBox.points[3].x);
     float AddLenY = StrideY*abs(BoundingBox.points[0].y - BoundingBox.points[1].y); 
     //////////////////////////////////////////////////////////////////
-
     //Check if atleast one edge inside
     for(int j=0; j<4; j++) //for each point in polygon
     {
         if(Poly.points[j].x > grid.lower.x && Poly.points[j].x < (grid.lower.x+AddLenX)
             && Poly.points[j].y > grid.lower.y && Poly.points[j].y < (grid.lower.y+AddLenY))
         {
-            PrintPoly(Poly);
+            //PrintPoly(Poly);
             return true;
         }
     }
     return false;
 }
 
+
 void InsidePoly(Polygon BoundingBox, Box *grid, Polygon *ListPolygons, int N_Polygons, int numberofBox){
     for(int i=0; i<numberofBox; i++)
     {
-        cout << "Grid " << i << " " << grid[i].lower.x << " " << grid[i].lower.y << endl;
+        //cout << "Grid " << i << " " << grid[i].lower.x << " " << grid[i].lower.y << endl;
         for(int j=0; j<N_Polygons; j++)
         {
             //Check if the Polygon is inside the rectangle
@@ -129,13 +123,28 @@ void InsidePoly(Polygon BoundingBox, Box *grid, Polygon *ListPolygons, int N_Pol
             if(Inside(grid[i], ListPolygons[j], BoundingBox) || AtIntersect(grid[i], ListPolygons[j], BoundingBox))
             {
                 //Add Index of this polygon in this grid vector
-                //grid[i].Poly.push_back(ListPolygons[j].label);
                 grid[i].Poly.push_back(ListPolygons[j].label);
             }
         }
-        for(int j=0; j<grid[i].Poly.size(); j++)
+        /*for(int j=0; j<grid[i].Poly.size(); j++)
         {
             cout << "Poly number " << grid[i].Poly[j] << endl;
+        }
+        */
+    }
+}
+
+int PointInside(Point P, Box *grid, Polygon BoundingBox){ //Returns the ID of the Gridblock where this point lies
+    int num_Yparts = (1/StrideY);
+    float AddLenX = StrideX*abs(BoundingBox.points[0].x - BoundingBox.points[3].x); //How much length adds to each box X
+    float AddLenY = StrideY*abs(BoundingBox.points[0].y - BoundingBox.points[1].y); //How much length adds to each box Y
+    int id;
+    for(int i=0; i<num_Yparts; i++){
+        for(int j=0; j<(1/StrideX); j++){
+            id = (i*num_Yparts)+j; 
+            if(P.x > grid[id].lower.x && P.x < (grid[id].lower.x+AddLenX)
+               && P.y > grid[id].lower.y && P.y < (grid[id].lower.y+AddLenY))
+                return id;
         }
     }
 }
