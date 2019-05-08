@@ -1,9 +1,8 @@
 #include "Point2Polygon.hpp"
-#include "ReorientPoly.hpp"
 #include "Preproc.hpp"
+#include "ReorientPoly.hpp"
 #include <cfloat>
 #include <fstream>
-
 
 using namespace std;
 
@@ -77,14 +76,14 @@ int main(int argc, char *argv[]){
     int numberofBox = (1/StrideX)*(num_Yparts);
     grid = (Box*)malloc(sizeof(Box)*numberofBox); //allcate that many grid elements
     gridding(grid, BoundingBox); //Initializing Grids
-    int id;
+    /*int id;
     for(int i=0; i<num_Yparts; i++){
         for(int j=0; j<(1/StrideX); j++){
             id = (i*num_Yparts)+j; 
             cout << "Grid " << id << " " << grid[id].lower.x << " " << grid[id].lower.y << endl;
         }
-    }
-    //InsidePoly(grid, ListPolygons, numberofBox);
+    }*/
+    InsidePoly(grid, ListPolygons, N_Polygons, numberofBox);
 
     PrintPoly(BoundingBox);
 
