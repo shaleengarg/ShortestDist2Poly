@@ -79,28 +79,3 @@ void Reorient(Polygon &Poly)
    p0 = Poly.points[0]; 
    qsort(&Poly.points[1], 3, sizeof(Point), compare); 
 } 
-  
-/*
-// Driver program to test above functions 
-int main() 
-{ 
-    Polygon Poly;
-    Poly.points[0].x = 0;
-    Poly.points[1].x = 2;
-    Poly.points[2].x = 0;
-    Poly.points[3].x = 2;
-    Poly.points[0].y = 2;
-    Poly.points[1].y = 0;
-    Poly.points[2].y = 0;
-    Poly.points[3].y = 2;
-
-    //int n = sizeof(points)/sizeof(points[0]); 
-    //printClosedPath(points, 4); 
-    ClosedPath(Poly); 
-   for (int i=0; i<4; i++) 
-       cout << "(" << Poly.points[i].x << ", "
-            << Poly.points[i].y <<"), "; 
-   cout << endl;
-    return 0; 
-} 
-*/
